@@ -1,6 +1,6 @@
 # traceit-react-hook
 
-A lightweight npm package that provides a simple and efficient way to trace the execution of React hooks in your application.
+A lightweight npm package that provides a custom hook for React implementing dynamic tracing of an element.
 
 ## Installation
 
