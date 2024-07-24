@@ -1,0 +1,23 @@
+.element-to-trace {
+    background-color: rgb(248, 246, 245);
+    color: rgb(21, 21, 21);
+    font-size: 16px;
+    padding: 10px;
+    margin: 10px;
+}
+
+.demo-remount-button {
+    font-family: 'Nunito Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    color: rgb(23, 22, 22);
+    font-size: 16px;
+    padding: 20px;
+    margin: 20px;
+    cursor: pointer;
+}
+
+.trace-comment {
+    font-family: 'Nunito Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    color: rgb(23, 22, 22);
+    font-size: 16px;
+    margin-bottom: 20px;
+}
