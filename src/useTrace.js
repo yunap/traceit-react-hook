@@ -24,29 +24,31 @@ const hexToRgb = (hex) => {
         : null;
 };
 
-export const useTrace = (elementRef, hide, trace, options) => {
+export const useTrace = (elementRef, trace, options) => {
     const mergedOptions = { ...defaultOptions, ...options };
     const [redraw, setRedraw] = useState(trace); // Add state to trigger redraw
 
     const handleClick = (e) => {
         const { onClick } = mergedOptions;
-     //   e.preventDefault();
+        e.preventDefault();
         onClick(e);
     };
 
     useEffect(() => {
         const element = elementRef.current;
-        if (!element || hide) return;
+        if (!element || !trace) return;
 
         const setupCanvas = (canvas, element, mergedOptions) => {
             const padding = mergedOptions.canvasPadding;
             const { width, height } = element.getBoundingClientRect() || {};
-          
+        
             canvas.width = width + padding * 2;
             canvas.height = height + padding * 2;
+            console.log('canvas width', canvas.width, 'height', canvas.height);
             canvas.style.position = 'absolute';
-            canvas.style.left = `-${parseInt(padding / 2)}px`;
-            canvas.style.top = `-${parseInt(padding / 2)}px`;
+            canvas.style.pointerEvents = "none";
+            canvas.style.left = `-${parseInt(padding)}px`;
+            canvas.style.top = `-${parseInt(padding)}px`;
             canvas.style.width = `${canvas.width}px`;
             canvas.style.height = `${canvas.height}px`;
           };
@@ -108,11 +110,14 @@ export const useTrace = (elementRef, hide, trace, options) => {
         animateTrace();
 
         // Add event listeners for click and resize events
+        // pointer-events: none; to let the click event pass through the canvas
         canvas.addEventListener('click', handleClick);
         window.addEventListener('resize', setRedraw);
 
         // Append canvas to body
-        element.style.position = 'relative';
+        const styles = getComputedStyle(element)
+        element.style.position = styles.position !== 'absolute' ? 'relative' : element.style.position;
+        element.style.overflow = 'visible';
         element.appendChild(canvas);
 
         return () => {
@@ -123,7 +128,7 @@ export const useTrace = (elementRef, hide, trace, options) => {
                 element.removeChild(canvas);
             }
         };
-    }, [trace, redraw, hide]);
+    }, [trace, redraw]);
 
     return null;
 };

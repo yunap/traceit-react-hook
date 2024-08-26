@@ -8,9 +8,9 @@ import './button.css';
  */
 const TraceDemo = ({ ...props }) => {
   const elementRef = useRef(null);
-  const { hide, trace } = props;
+  const { trace } = props;
 
-  useTrace(elementRef, hide, trace, props);
+  useTrace(elementRef, trace, props);
 
   return (
     <div ref={elementRef} className="element-to-trace">
@@ -38,10 +38,10 @@ const RenderingControls = ({
 };
 
 export const TraceDemoComponent = (props) => {
-  const { hide, onClick } = props;
+  const { trace, onClick } = props;
   return (
   <RenderingControls>
-   {hide && <div className="trace-comment">Trace is hidden, modify "hide" control to trigger the trace</div>}
+   {!trace && <div className="trace-comment">Trace is hidden, modify "trace" control to trigger the trace</div>}
    {onClick && <div className="trace-comment">Click the trace to trigger the onClick event</div>}
     <TraceDemo {...props} />
   </RenderingControls>

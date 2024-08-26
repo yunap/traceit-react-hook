@@ -11,7 +11,7 @@ const meta = {
   argTypes: {
     strokeWidth: { control: 'number' },
     strokeColor: { control: 'color' },
-    hide: { control: 'boolean' },
+    trace: { control: 'boolean' },
   },
   parameters: {
     controls: { expanded: true },
@@ -23,7 +23,6 @@ export default meta;
 
 export const Default = {
   args: {
-    hide: false,
     trace: true,
   },
 };
@@ -41,10 +40,10 @@ export const StrokeWidthAndColor = {
 
 export const GapPoint = {
   args: {
-      strokeWidth: '3',
-      strokeColor: '#0000ee',
-      gapPoint: 'bottom_right',
-      trace: true,
+    strokeWidth: '3',
+    strokeColor: '#0000ee',
+    gapPoint: "left",
+    trace: true
   },
 };
 
@@ -87,11 +86,10 @@ export const OnEndTrace = {
 
 export const HideTrace = {
   args: {
-      hide: true,
       strokeWidth: '4',
       strokeColor: '#009900',
       gapPoint: 'top_left',
-      trace: true,
+      trace: false,
   },
 };
 

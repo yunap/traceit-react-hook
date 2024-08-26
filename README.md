@@ -27,10 +27,9 @@ import { useTrace } from 'traceit-react-hook';
 
 function MyComponent() {
   const elementRef = useRef(null);
-  const [hide, setHide] = useState(false);
   const [trace, setTrace] = useState(true);
   
-  useTrace(elementRef, hide, trace, {
+  useTrace(elementRef, trace, {
     strokeWidth: 3,
     strokeColor: '#ff0000',
     gapPoint: 'top_right'
@@ -41,7 +40,6 @@ function MyComponent() {
       <div ref={elementRef} style={{ width: 200, height: 100, background: '#f0f0f0' }}>
         Element being traced
       </div>
-      <button onClick={() => setHide(!hide)}>Toggle Hide</button>
       <button onClick={() => setTrace(!trace)}>Toggle Trace</button>
     </>
   );
@@ -52,22 +50,22 @@ function MyComponent() {
 ## API
 
 ```jsx
-        useTrace(elementRef, hide, trace, options);
+        useTrace(elementRef, trace, options);
 
         elementRef: React ref object pointing to the element to be traced
         options: (Optional) An object with the following properties:
-                strokeWidth: Width of the trace line (default: 2)
-                strokeColor: Color of the trace line (default: '#000000')
-                strokeDasharray: Array specifying dash pattern (default: [])
-                lineCap: Style of line endings ('butt', 'round', or 'square', default: 'round')
-                gapPoint: Where the gap in the trace should be ('top', 'right', 'bottom', 'left', 'top_right', 'bottom_right', 'bottom_left', 'top_left', default: 'top')
-                redrawSpeed: Speed of the redraw animation in milliseconds (default: 1000)
-                fillOpacity: Opacity of the fill color (default: 0)
-                fillColor: Color of the fill (default: 'none')
-                canvasPadding: Padding around the traced element (default: 0)
-                hide: Boolean to hide/show the trace (default: false)
-                trace: Boolean to enable/disable tracing (default: true)
-                onEndTrace: Callback function called when tracing ends
+          strokeWidth: Width of the trace line (default: 2)
+          strokeColor: Color of the trace line (default: '#000000')
+          strokeDasharray: Dash pattern repeating [10, 5, 2, 5] 10px line, 5px gap, 2px line, and 5px gap (default: [])
+          lineCap: Style of line endings ('butt', 'round', or 'square', default: 'round')
+          gapPoint: Where the gap in the trace should be ('top', 'right', 'bottom', 'left', 'top_right', 'bottom_right', 'bottom_left', 'top_left', default: 'top')
+          redrawSpeed: Speed of the redraw animation in milliseconds (default: 2500)
+          fillOpacity: Opacity of the fill color (default: 0)
+          fillColor: Color of the fill (default: 'none')
+          canvasPadding: Padding around the traced element (default: 0)
+          hide: Boolean to hide/show the trace (default: false)
+          trace: Boolean to enable/disable tracing (default: true)
+          onEndTrace: Callback function called when tracing ends
 ```
 
 ## Contributing
