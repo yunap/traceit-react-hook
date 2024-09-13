@@ -12,8 +12,14 @@ const TraceDemo = ({ ...props }) => {
 
   useTrace(elementRef, trace, props);
 
+  const handleElementClick = () => {
+    if (!props.onClick) {
+      alert('Underlying element clicked!');
+    }
+  };
+
   return (
-    <div ref={elementRef} className="element-to-trace">
+    <div ref={elementRef} className="element-to-trace" onClick={handleElementClick}>
       <h2>This is the element to be traced</h2>
     </div>
   );
@@ -43,32 +49,7 @@ export const TraceDemoComponent = (props) => {
   <RenderingControls>
    {!trace && <div className="trace-comment">Trace is hidden, modify "trace" control to trigger the trace</div>}
    {onClick && <div className="trace-comment">Click the trace to trigger the onClick event</div>}
+   {!onClick && trace && <div className="trace-comment">Click the element to trigger the underlying element's click event</div>}
     <TraceDemo {...props} />
   </RenderingControls>
 )};
-
-/*
-ButtonTst.propTypes = {
-  /**
-   * Is this the principal call to action on the page?
-   *
-  hide: PropTypes.bool,
-  trace: PropTypes.bool,
-  onClick: PropTypes.func,
-};
-
-ButtonTst.defaultProps = {
-  hide: false,  
-  trace: false, 
-  onClick: undefined,
-};
-*/
-
-
-  //   strokeColor: '#00aa33', // Set the stroke color to blue
-  //   strokeWidth: 5, // Increase the stroke width
-  //   gapPoint: 'right', // Change the gap point location to bottom-right
-  //   redrawSpeed: 3000, // Adjust the redraw speed (in milliseconds)
-  //   onEndTrace: () => console.log('Trace animation completed!'), // Callback function when trace animation ends
-  //   onClick: (e) => console.log('Clicked on the trace!', e), // Callback function when the trace is clicked
-  

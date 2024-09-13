@@ -27,12 +27,11 @@ export const Default = {
   },
 };
 
-
 export const StrokeWidthAndColor = {
   args: {
       strokeWidth: '5',
       strokeColor: '#ee0000',
-      strokeDasharray: [10, 5, 2, 5], // dash pattern with 10px line, 5px gap, 2px line, and 5px gap, repeating.
+      strokeDasharray: [10, 5, 2, 5],
       lineCap: 'round',
       trace: true,
   },
@@ -72,17 +71,31 @@ const handleClick = () => {
   alert('Element Clicked!');
 };
 
+export const OnClick = {
+  args: {
+      onClick: handleClick,
+      strokeWidth: '4',
+      strokeColor: '#3bcdd1',
+      fillOpacity: 0.3,
+      fillColor: '#ffd633',
+      gapPoint: 'bottom_left',
+      trace: true,
+  },
+};
+
+const handleEndTrace = () => {
+  alert('Trace Ended!');
+};
+
 export const OnEndTrace = {
   args: {
-      onEndTrace: fn(),
-      onClick: handleClick,
+      onEndTrace: handleEndTrace,
       strokeWidth: '4',
       strokeColor: '#50289f',
       gapPoint: 'top',
       trace: true,
   },
 };
-
 
 export const HideTrace = {
   args: {
@@ -93,6 +106,13 @@ export const HideTrace = {
   },
 };
 
-
-
-
+export const ClickThroughCanvas = {
+  args: {
+    strokeWidth: '4',
+    strokeColor: '#ff6600',
+    fillOpacity: 0.2,
+    fillColor: '#ffcc00',
+    gapPoint: 'right',
+    trace: true,
+  },
+};

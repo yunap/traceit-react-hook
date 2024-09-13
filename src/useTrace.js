@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { generateEllipsePoints } from './utils/shapeMath';
 
 const defaultOptions = {
@@ -13,7 +13,7 @@ const defaultOptions = {
     redrawSpeed: 2500,
     canvasPadding: 10,
     onEndTrace: () => {},
-    onClick: () => {},
+    onClick: null,
 };
 
 // helper functions
@@ -26,12 +26,15 @@ const hexToRgb = (hex) => {
 
 export const useTrace = (elementRef, trace, options) => {
     const mergedOptions = { ...defaultOptions, ...options };
-    const [redraw, setRedraw] = useState(trace); // Add state to trigger redraw
+    const [redraw, setRedraw] = useState(trace);
+    const isResizing = useRef(false);
 
     const handleClick = (e) => {
         const { onClick } = mergedOptions;
-        e.preventDefault();
-        onClick(e);
+        if (typeof onClick === 'function') {
+            e.preventDefault();
+            onClick(e);
+        }
     };
 
     useEffect(() => {
@@ -44,14 +47,15 @@ export const useTrace = (elementRef, trace, options) => {
         
             canvas.width = width + padding * 2;
             canvas.height = height + padding * 2;
-            console.log('canvas width', canvas.width, 'height', canvas.height);
             canvas.style.position = 'absolute';
-            canvas.style.pointerEvents = "none";
             canvas.style.left = `-${parseInt(padding)}px`;
             canvas.style.top = `-${parseInt(padding)}px`;
             canvas.style.width = `${canvas.width}px`;
             canvas.style.height = `${canvas.height}px`;
-          };
+            // Set pointer-events to 'none' only if onClick is a function
+            canvas.style.pointerEvents = typeof mergedOptions.onClick === 'function' ? 'auto' : 'none';
+      
+        };
 
         const animateTrace = () => {
             const { strokeColor, strokeWidth, strokeOpacity, fillOpacity, fillColor, redrawSpeed, strokeDasharray, lineCap, onEndTrace } = mergedOptions;
@@ -60,13 +64,13 @@ export const useTrace = (elementRef, trace, options) => {
             const animate = (timestamp) => {
                 if (!start) start = timestamp;
                 const progress = timestamp - start;
-                const percentage = Math.min(progress / redrawSpeed, 1);
+                const currentRedrawSpeed = isResizing.current ? 1 : redrawSpeed;
+                const percentage = Math.min(progress / currentRedrawSpeed, 1);
 
-                ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear canvas
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
                 ctx.save();
                 ctx.beginPath();
     
-                // Draw the shape based on progress
                 const endPointIndex = Math.floor(percentage * controlPoints.length);
                 for (let i = 0; i < endPointIndex - 1; i++) {
                     if (i === 0) {
@@ -80,22 +84,25 @@ export const useTrace = (elementRef, trace, options) => {
                     }
                 }
         
-                if( strokeDasharray ) {
+                if (strokeDasharray) {
                     ctx.setLineDash(strokeDasharray);
                 }
                 ctx.lineCap = lineCap;
                 ctx.strokeStyle = `rgba(${hexToRgb(strokeColor)}, ${strokeOpacity})`;
-                ctx.fillStyle = `rgba(${hexToRgb(fillColor ? fillColor : strokeColor)}, ${fillOpacity})`;
+                ctx.fillStyle = `rgba(${hexToRgb(fillColor && fillOpacity ? fillColor : strokeColor)}, ${fillOpacity})`;
                 ctx.lineWidth = strokeWidth;
                 if (fillColor) {
                     ctx.fill();
                 }
                 ctx.stroke();
         
-                if (progress < redrawSpeed) {
+                if (progress < currentRedrawSpeed) {
                     requestAnimationFrame(animate);
                 } else {
-                    onEndTrace();
+                    if (typeof onEndTrace === 'function') {
+                        onEndTrace();
+                    }
+                    isResizing.current = false;
                 }
             }
 
@@ -109,19 +116,22 @@ export const useTrace = (elementRef, trace, options) => {
 
         animateTrace();
 
-        // Add event listeners for click and resize events
-        // pointer-events: none; to let the click event pass through the canvas
-        canvas.addEventListener('click', handleClick);
-        window.addEventListener('resize', setRedraw);
+        const handleResize = () => {
+            isResizing.current = true;
+            setRedraw(prev => !prev);
+            console.log('useTrace: handleResize');
+        };
 
-        // Append canvas to body
+        canvas.addEventListener('click', handleClick);
+        window.addEventListener('resize', handleResize);
+
         const styles = getComputedStyle(element)
         element.style.position = styles.position !== 'absolute' ? 'relative' : element.style.position;
         element.style.overflow = 'visible';
         element.appendChild(canvas);
 
         return () => {
-            window.removeEventListener('resize', setRedraw);
+            window.removeEventListener('resize', handleResize);
 
             if (canvas) {
                 canvas.removeEventListener('click', handleClick);
@@ -132,5 +142,3 @@ export const useTrace = (elementRef, trace, options) => {
 
     return null;
 };
-
-
